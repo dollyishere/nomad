@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- <head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head> -->
+<body>
+  <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+	// App의 경우, 모든 함수를 실행하는 함수라고 할 수 있다
+	function App() {
+		const [amount, setAmount] = React.useState(0)
+		const [inverted, setInverted] = React.useState(false)
+		const onChange = (event) => {
+				setAmount(event.target.value)
+		}
+		const reset = () => setAmount(0)
+		const onInvert = () => {
+				reset()
+				setInverted((current) => !current)
+		}
+		return (
+			<div>
+				<h1>Super Converter</h1>
+				<div>
+					<label htmlFor="minutes">Minutes</label> 
+					<input
+					// 해당 구문은 js 특유의 문법인 삼항연산자라 할 수 있음
+					// 먼저 ? 앞까지는 조건문이라 할 수 있음
+					// 그 뒤부터 : 전까지는 조건문이 참일 경우 실행할 표현식임
+					// 이후에는 조건문이 거짓일 경우 실행할 표현식이 배치됨
+					// 해당 연산자는 if...else 문의 대체제로 빈번히 사용됨
+						value={inverted ? amount * 60 : amount}
+						id="minutes"
+						placeholder="Minutes"
+						type="number"
+						onChange={onChange}
+						disabled={inverted}										
+					/>   
+				</div>
+				<div>
+					<label htmlFor="hours">Hours</label> 
+					<input
+						value={inverted ? amount : Math.round(amount / 60)}
+						id="hours"
+						placeholder="Hours"
+						type="number"
+						onChange={onChange}
+						disabled={!inverted}										
+					/>   
+				</div>
+				<button onClick={reset}>Reset</button>
+				<button onClick={onInvert}>{inverted ? "Turn back" : "Invert"}</button>
+			</div>
+			)
+		}
+		// root라는 id를 가진 div를 body 내에 만들어둔 후, ReactDOM을 통해 App 함수를 root 내부에서 실행시켜준다(즉, 렌더링 한다.)
+		const root = document.getElementById("root")
+		ReactDOM.render(<App />, root)
+</script>
+</html>

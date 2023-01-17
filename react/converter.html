@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<!-- <head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head> -->
+<body>
+  <div id="root"></div>
+</body>
+<script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<script type="text/babel">
+	function MinutesToHours() {
+		const [amount, setAmount] = React.useState(0)
+		const [inverted, setInverted] = React.useState(false)
+		const onChange = (event) => {
+				setAmount(event.target.value)
+		}
+		const reset = () => setAmount(0)
+		const onInvert = () => {
+				reset()
+				setInverted((current) => !current)
+		}
+		return (
+			<div>
+				<div>
+					<label htmlFor="minutes">Minutes</label> 
+					<input
+					// 해당 구문은 js 특유의 문법인 삼항연산자라 할 수 있음
+					// 먼저 ? 앞까지는 조건문이라 할 수 있음
+					// 그 뒤부터 : 전까지는 조건문이 참일 경우 실행할 표현식임
+					// 이후에는 조건문이 거짓일 경우 실행할 표현식이 배치됨
+					// 해당 연산자는 if...else 문의 대체제로 빈번히 사용됨
+						value={inverted ? amount * 60 : amount}
+						id="minutes"
+						placeholder="Minutes"
+						type="number"
+						onChange={onChange}
+						disabled={inverted}										
+					/>   
+				</div>
+				<div>
+					<label htmlFor="hours">Hours</label> 
+					<input
+						value={inverted ? amount : Math.round(amount / 60)}
+						id="hours"
+						placeholder="Hours"
+						type="number"
+						onChange={onChange}
+						disabled={!inverted}										
+					/>   
+				</div>
+				<button onClick={reset}>Reset</button>
+				<button onClick={onInvert}>{inverted ? "Turn back" : "Invert"}</button>
+			</div>
+		)
+	}
+	// React에서는 컴포넌트 내부에 다른 컴포넌트를 렌더링할 수 있음
+	// 이를 분할정복이라 함
+	function KmToMiles() {
+		const [amount, setAmount] = React.useState(0)
+		const [inverted, setInverted] = React.useState(false)
+		const onChange = (e) => {
+			setAmount(event.target.value)
+		}
+		const reset = () => setAmount(0)
+		const onInvert = () => {
+			reset()
+			setInverted((current) => !current)
+		}
+		return (
+			<div>
+				<h1>KM 2 M</h1>
+				<div>
+					<label htmlFor="km">KM</label>
+					<input
+						value={inverted ? amount * 1.609 : amount}
+						id="km"
+						placeholder="KM"
+						type="number"
+						onChange={onChange}
+						disabled={inverted}
+					/>
+				</div>
+				<div>
+					<label htmlFor="mile">Mile</label>
+					<input
+						value={inverted ? amount : (amount / 1.609).toFixed(6)}
+						id="mile"
+						placeholder="Mile"
+						type="number"
+						onChange={onChange}
+						disabled={!inverted}
+					/>
+				</div>
+				<button onClick={reset}>Reset</button>
+				<button onClick={onInvert}>{inverted ? "Turn back" : "Invert"}</button>
+			</div>
+		)
+	}
+	// App()는 가장 중요한 컴포넌트라고 할 수 있음
+	// 모든 컴포넌트들을 받아들여 화면에 직접적으로 렌더링하는 메인 컴포넌트임
+	function App() {
+		// useState 괄호 내부 값은 앞 변수(아래에서는 index)의 초기값을 설정해주는 것임(굳이 숫자가 아니더라도 Array도 ㅇㅋ)
+		// index는 사용하고 싶은 변수, setIndex는 이 index의 값을 직접적으로 변화시킬 수 있는 함수명임
+		// 굳이 this.state 같은 컴퓨터가 착각할만한 코드를 짜지 않을 수 있다는 점에서 장점인듯?
+		// 해당 함수가 실행되는 것으로 index의 값이 바뀌면, ReactDOM이 알아서 변화한 부분만 재랜더링하게 됨
+		const [index, setIndex] = React.useState("xx")
+		const onSelect = (event) => {
+			setIndex(event.target.value)
+		}
+		// select나 option 자체는 html에 속해있음
+		// 이를 event.target.value를 사용하고 해당 조건에 따라 {}로 조건을 지정하는 것으로 렌더링된 결과물을 다르게 하는 것
+		// value에서 int에 속할 0이나 1을 ""로 감싸는 이유는 value가 string으로 작성되어야 하기 때문
+		return (
+			<div>
+				<h1>Super Converter</h1>
+				<select
+					value = {index}
+					onChange={onSelect}
+					>
+					<option value="xx">Select your units</option>
+					<option value="0">Minutes & Hours</option>
+					<option value="1">KM & Mlies</option>
+				</select>
+				<hr/>
+				{index === "xx" ? "Please select" : null}
+				{index === "0" ? <MinutesToHours /> : null}
+				{index === "1" ? <KmToMiles /> : null}
+			</div>
+		)
+	}
+	const root = document.getElementById("root")
+	ReactDOM.render(<App />, root)
+</script>
+</html>
