@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- <head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head> -->
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/prop-types@15.7.2/prop-types.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+	<script type="text/babel">
+		// props의 기본값을 설정하는 것도 가능하다(js 자체 문법)
+		function Btn({text, fontSize = 14}) {
+      console.log(text, "was rendered")
+			return (
+        <button
+          style={{
+            backgroundColor: "tomato",
+            color: "white",
+            padding: "10px 20px",
+            border: 0,
+            borderRadius: 10,
+						fontSize,
+          }}
+        >
+          {text}
+        </button>
+      );
+    }
+		// 만약 props를 사용하면서 협업 등의 이유로 typechecking을 원한다면, prop-types를 사용하면 된다
+		// 근데 아마 typescripts 사용하면 안 써도 될 듯?
+		// 만약 필수적으로 값이 입력되기를 원한다면, isRequired를 뒤에 붙여준다(자세한 건 공식 문서 참고)
+		// 기재된 조건을 어기면 console에서 warning을 보내게 되는데, 이는 error는 아니지만, 개발자에게 도움이 되는 내용이라 할 수 있다
+		// (문법적으로는 맞을 지도 모르지만, 컴포넌트에게는 치명적인 실수가 될 수 있으므로)
+		Btn.propTypes = {
+			text: PropTypes.string.isRequired,
+			fontSize: PropTypes.number,
+		}
+		
+		// props는 단지 우리가 원하는 컴포넌트에 데이터를 보내기 위한 통로에 지나지 않음
+    // 주의할 점이 있다면 props를 전달할 때의 이름과 받아서 사용할 때의 이름은 동일해야 함
+		function App() {
+			return (
+        <div>
+          <Btn text="Save Changes" fontSize={18} />
+        </div>
+      );
+    }
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+  </script>
+</html>

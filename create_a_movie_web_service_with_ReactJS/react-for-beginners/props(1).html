@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <!-- <head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head> -->
+  <body>
+    <div id="root"></div>
+  </body>
+  <script src="https://unpkg.com/react@17.0.2/umd/react.development.js"></script>
+  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.development.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script type="text/babel">
+    // 컴포넌트는 JSX를 반환하는 함수라고 할 수 있다.
+		// function Btn의 괄호 안에 들어가는 값(props)은, 이하에서 해당 함수를 불러올 때 보내준 인자값과 같다
+    // props의 경우 object인데, 이를 번거롭게 props.`key이름`로 호출할 필요 없이 불러오는 방법을 shortcut이라고 한다
+		// shortcut의 경우, 해당 key(인자값)를 중괄호 안에 넣는다!
+		// 이때 props는 우리가 직접 넣어주어야 함
+		// App에서 설정한 props는 그냥 그 props의 이름일 뿐, 실제로 적용되지 않기 때문임
+		// 물론 props로 함수도 보내줄 수 있음
+		function Btn({text, changeValue}) {
+			const [btnText, setText] = React.useState("haha")
+      console.log(text, "was rendered")
+			return (
+        <button
+					onClick={changeValue}
+          style={{
+            backgroundColor: "tomato",
+            color: "white",
+            padding: "10px 20px",
+            border: 0,
+            borderRadius: 10,
+						fontSize: 16,
+          }}
+        >
+          {text}
+        </button>
+      );
+    }
+		// 이하는 memorized 버전의 Btn이다
+		// 이렇게 재렌더링을 막아주는 것으로 서비스의 처리 속도를 빠르게 할 수 있다
+		const MemorizedBtn = React.memo(Btn)
+
+		// react Memo로 불필요한 재렌더링을 막아줄 수 있다 (바뀌지 않는 props 한정)
+		// Memo를 사용한다고 해도, props에 변화가 있다면 재렌더링된다
+    function App() {
+			const [value, setValue] = React.useState("Save Changes")
+      const changeValue = () => setValue("Revert Changes")
+			return (
+        <div>
+          <MemorizedBtn text={value} changeValue={changeValue} />
+          <MemorizedBtn text="Continue" />
+        </div>
+      );
+    }
+    const root = document.getElementById("root");
+    ReactDOM.render(<App />, root);
+  </script>
+</html>
